@@ -1,0 +1,178 @@
+﻿@model IEnumerable<DonHangModel>
+
+<h1>Danh sách Đơn Hàng</h1>
+<!-- Table with stripped rows -->
+
+<!-- CSS trạng thái -->
+<style>
+    .status-pending {
+        color: black;
+    }
+    .status-shipping {
+        color: orange;
+    }
+    .status-success {
+        color: green;
+    }
+    .status-cancelled {
+        color: red;
+    }
+</style>
+
+<!-- Dropdown lọc trạng thái -->
+<div class="mb-3">
+    <label for="filterStatus" class="form-label fw-bold">Lọc theo trạng thái đơn hàng:</label>
+    <select id="filterStatus" class="form-select" style="max-width: 300px;">
+        <option value="">-- Tất cả --</option>
+        <option value="Chờ Xác Nhận">Chờ Xác Nhận</option>
+        <option value="Đang Vận Chuyển">Đang Vận Chuyển</option>
+        <option value="Giao Hàng Thành Công">Giao Hàng Thành Công</option>
+        <option value="Đã Hủy">Đã Hủy</option>
+    </select>
+</div>
+
+<!-- Bảng đơn hàng -->
+<table id="check" class="table-bordered table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Khóa Đơn Hàng</th>
+            <th>Khóa User</th>
+            <th>Tên Người Đặt</th>
+            <th>Tổng Giá Trị</th>
+            <th>Lợi Nhuận</th>
+            <th>Phương Thức Thanh Toán</th>
+            <th>Trạng Thái Đơn Hàng</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var trangThai = item.TrangThaiDonHang;
+            var isDisabled = (trangThai == "Đã Hủy" || trangThai == "Giao Hàng Thành Công") ? "disabled" : "";
+
+            <tr>
+                <td>@item.PK_DonHang</td>
+                <td>@item.FK_TaiKhoan</td>
+                <td>@item.NguoiNhan</td>
+                <td>@item.TongGiaTri.ToString("N0")</td>
+                <td>@item.LoiNhuan.ToString("N0")</td>
+                <td>
+                    @item.PhuongThucThanhToan - 
+                    <span class="@(item.TrangThaiThanhToan ? "text-success" : "text-danger")">
+                        @(item.TrangThaiThanhToan ? "Đã Thanh Toán" : "Chưa Thanh Toán")
+                    </span>
+                </td>
+
+                <td>
+                    <select class="form-select trangthai-select" data-id="@item.PK_DonHang" @isDisabled>
+                        @{
+                            var options = new List<string> {
+                                "Chờ Xác Nhận",
+                                "Đang Vận Chuyển",
+                                "Giao Hàng Thành Công",
+                                "Đã Hủy"
+                            };
+
+                            foreach (var opt in options)
+                            {
+                                var selected = opt == trangThai ? "selected" : "";
+                                @: <option value="@opt" @selected>@opt</option>
+                            }
+                        }
+                    </select>
+                </td>
+
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-action="XemChiTiet" asp-controller="QLDonHang" asp-route-id="@item.PK_DonHang">
+                        Xem Thông Tin
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#check').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+
+        $('.trangthai-select').on('change', function () {
+            const newStatus = $(this).val();
+            const id = $(this).data('id');
+
+            if (confirm(`Bạn có chắc muốn cập nhật trạng thái đơn hàng #${id} thành "${newStatus}" không?`)) {
+                $.ajax({
+                    url: '@Url.Action("CapNhatTrangThai", "QLDonHang")',
+                    type: 'POST',
+                    data: { id: id, trangThai: newStatus },
+                    success: function (res) {
+                        alert('Cập nhật thành công!');
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi cập nhật!');
+                    }
+                });
+            }
+        });
+
+    </script>
+
+    <script>
+        function applyColor($select) {
+            const val = $select.val();
+            $select.removeClass("status-pending status-shipping status-success status-cancelled");
+
+            if (val === "Chờ Xác Nhận") {
+                $select.addClass("status-pending");
+            } else if (val === "Đang Vận Chuyển") {
+                $select.addClass("status-shipping");
+            } else if (val === "Giao Hàng Thành Công") {
+                $select.addClass("status-success");
+            } else if (val === "Đã Hủy") {
+                $select.addClass("status-cancelled");
+            }
+        }
+
+        $(document).ready(function () {
+            // Áp màu khi load trang
+            $(".trangthai-select").each(function () {
+                applyColor($(this));
+            });
+
+            // Đổi màu khi thay đổi trạng thái
+            $(".trangthai-select").on("change", function () {
+                applyColor($(this));
+                // Nếu muốn gọi AJAX cập nhật DB thì xử lý ở đây
+            });
+
+            // Lọc theo trạng thái
+            $("#filterStatus").on("change", function () {
+                var selected = $(this).val();
+                $("#check tbody tr").each(function () {
+                    var row = $(this);
+                    var status = row.find(".trangthai-select").val();
+                    if (selected === "" || status === selected) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            });
+        });
+    </script>
+
+}

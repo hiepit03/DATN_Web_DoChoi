@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Web_DoChoi.Models.DiaChiModel>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+        <h1>Quản Lý Địa Chỉ</h1>
+
+        <a class="btn btn-primary btn-sm" asp-action="Create" asp-controller="DiaChi" asp-route-idtaikhoan=@ViewBag.idtaikhoan>
+            Thêm Mới Địa Chỉ
+        </a>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Tên Người Nhận</th>
+                        <th scope="col">Số Điện Thoại</th>
+                        <th scope="col">Địa Chỉ Cụ Thể</th>
+                        <th scope="col">Trạng Thái</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="6">Không Có Địa Chỉ</td>
+                        </tr>
+                    }
+                    @foreach(var item in Model)
+                    {
+                        <tr>
+                            <td>@item.TenNguoiNhan</td>
+                            <td>@item.SDTNhanHang</td>
+                            <td>@item.DiaChiCuThe</td>
+                            <td>
+                                @if (item.MacDinh == true)
+                                {
+                                    <span class="badge bg-success">Mặc định</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success"></span>
+                                }
+
+                            </td>
+
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+
+                                    @if (item.MacDinh == true)
+                                    {
+                                        <span class="badge bg-success"></span>
+                                    }
+                                    else
+                                    {
+                                        <form asp-controller="DiaChi"
+                                              asp-action="SetDiaChiMacDinh"
+                                              asp-route-iddiachi="@item.PK_DiaChi"
+                                              asp-route-idtaikhoan="@item.FK_TaiKhoan"
+                                              method="post">
+                                            <button type="submit" class="btn btn-primary btn-sm">Set Mặc Định</button>
+                                        </form>
+                                        
+                                        <form asp-controller="DiaChi"
+                                              asp-action="XoaDiaChi"
+                                              asp-route-iddiachi="@item.PK_DiaChi"
+                                              method="post">
+                                            <button type="submit" class="btn btn-sm rounded-circle bg-light border">
+                                                <i class="fa fa-times text-danger"></i>
+                                            </button>
+                                        </form>
+                                    }
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

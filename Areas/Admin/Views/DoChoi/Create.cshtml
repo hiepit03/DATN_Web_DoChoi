@@ -1,0 +1,110 @@
+﻿@model Web_DoChoi.Models.DoChoiModel
+<h1>Thêm mới đồ chơi</h1>
+
+<div class="col-md-9">
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <!-- Cột thứ nhất -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Tên Đồ Chơi</label>
+                    <input asp-for="TenDoChoi" class="form-control" />
+                    <span asp-validation-for="TenDoChoi" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Thời gian Nhập Hàng</label>
+                    <input asp-for="NgayNhapHang" class="form-control" />
+                    <span asp-validation-for="NgayNhapHang" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Giá Nhập Hàng</label>
+                    <input asp-for="GiaNhapHang" class="form-control" />
+                    <span asp-validation-for="GiaNhapHang" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Giá Bán</label>
+                    <input asp-for="GiaBan" class="form-control" />
+                    <span asp-validation-for="GiaBan" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Phần Trăm Khuyến Mãi</label>
+                    <input asp-for="PhanTramKhuyenMai" class="form-control" />
+                    <span asp-validation-for="PhanTramKhuyenMai" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Số Sao</label>
+                    <input asp-for="SoSao" class="form-control" value="0" readonly />
+                    <span asp-validation-for="SoSao" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Số Lượt Đánh Giá</label>
+                    <input asp-for="SoLuotDanhGia" class="form-control" value="0" readonly />
+                    <span asp-validation-for="SoLuotDanhGia" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Ảnh Đồ Chơi</label>
+                    <input asp-for="AnhUpLoad" class="form-control" />
+                    <span asp-validation-for="AnhUpLoad" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- Cột thứ hai -->
+            <div class="col-md-6">
+                <!-- Cột thứ hai -->
+                <div class="form-group">
+                    <label for="PhimId">Chọn Nhà Sản Xuất</label>
+                    <select asp-for="FK_NhaSanXuat" asp-items="ViewBag.NhaSanXuat" class="form-control">
+                        <option value="">-- Chọn Nhà Sản Xuất --</option>
+                    </select>
+                    <span asp-validation-for="FK_NhaSanXuat" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="PhimId">Chọn Danh Mục</label>
+                    <select asp-for="FK_DanhMuc" asp-items="ViewBag.DanhMuc" class="form-control">
+                        <option value="">-- Chọn Danh Mục --</option>
+                    </select>
+                    <span asp-validation-for="FK_NhaSanXuat" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label>Số Lượng Đã Bán</label>
+                    <input asp-for="SoLuongDaBan" class="form-control" value="0" readonly />
+                    <span asp-validation-for="SoLuongConLai" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Số Lượng Còn Lại</label>
+                    <input asp-for="SoLuongConLai" class="form-control" />
+                    <span asp-validation-for="SoLuongConLai" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Độ Tuổi Giới Hạn</label>
+                    <input asp-for="DoTuoiGioiHan" class="form-control" />
+                    <span asp-validation-for="DoTuoiGioiHan" class="text-danger" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Mô Tả</label>
+            <textarea asp-for="MoTa" class="form-control" style="height: 200px"></textarea>
+            <span asp-validation-for="MoTa" class="text-danger" />
+        </div>
+
+        <!-- Nút Submit -->
+        <div class="form-group" style="margin: 20px">
+            <button type="submit" class="btn btn-primary">Thêm mới</button>
+        </div>
+    </form>
+
+    <a asp-action="Index">Quay lại</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('MoTa');
+    </script>
+}
+

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.ChartDataPointViewModel>
+@{
+    ViewData["Title"] = "Thống kê doanh thu từ ngày đến ngày";
+    var startDate = ViewBag.StartDate as DateTime? ?? DateTime.Now.AddDays(-7);
+    var endDate = ViewBag.EndDate as DateTime? ?? DateTime.Now;
+}
+
+<!-- Tabs chính -->
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Index" asp-controller="ThongKe">Tổng quan</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="TonKho" asp-controller="ThongKe">Tồn kho</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="DoanhThu" asp-controller="ThongKe">Doanh thu</a>
+    </li>
+</ul>
+
+<!-- Tabs con -->
+<ul class="nav nav-pills mb-3" id="subTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" asp-action="DoanhThu" asp-controller="ThongKe">Thống kê theo năm</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" asp-action="DoanhThuTheoThang" asp-controller="ThongKe">Thống kê từng tháng trong năm</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" asp-action="DoanhThuTheoNgay" asp-controller="ThongKe">Thống kê từng ngày trong tháng</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" asp-action="DoanhThuTheoNgayDenNgay" asp-controller="ThongKe">Thống kê Từ Ngày Đến Ngày</a>
+    </li>
+</ul>
+
+<!-- Form lọc theo ngày -->
+<form method="get" class="card p-3 mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Từ Ngày</label>
+            <input type="date" name="startDate" class="form-control" value="@startDate.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Đến Ngày</label>
+            <input type="date" name="endDate" class="form-control" value="@endDate.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <button type="submit" name="export" value="none" class="btn btn-primary mt-4">
+                <i class="bi bi-bar-chart-fill me-1"></i> Thống kê
+            </button>
+            <button type="submit" name="export" value="excel" class="btn btn-success mt-4">
+                <i class="bi bi-file-earmark-excel me-1"></i> Xuất Excel
+            </button>
+            <button type="submit" name="export" value="pdf" class="btn btn-danger mt-4">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Xuất PDF
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Bảng dữ liệu -->
+<div class="card p-3">
+    <h5>Bảng thống kê từ ngày đến ngày</h5>
+    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-striped align-middle">
+            <thead class="table-light sticky-top bg-white" style="z-index: 1;">
+                <tr>
+                    <th>Ngày</th>
+                    <th>Vốn</th>
+                    <th>Doanh thu</th>
+                    <th>Lợi nhuận</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.DateLabel.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Von.ToString("N0")₫</td>
+                        <td>@item.DoanhThu.ToString("N0")₫</td>
+                        <td>@item.LoiNhuan.ToString("N0")₫</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

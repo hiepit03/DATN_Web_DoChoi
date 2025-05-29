@@ -1,0 +1,31 @@
+﻿@model Web_DoChoi.Models.SlideModel
+<h1>Thêm mới Slide</h1>
+
+<div class="col-md-9">
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <!-- Cột thứ nhất -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Ảnh Đồ Chơi</label>
+                    <input asp-for="AnhUpLoad" class="form-control" />
+                    <span asp-validation-for="AnhUpLoad" class="text-danger" />
+                </div>
+            </div>
+
+        <!-- Nút Submit -->
+        <div class="form-group" style="margin: 20px">
+            <button type="submit" class="btn btn-primary">Thêm mới</button>
+        </div>
+    </form>
+
+    <a asp-action="Index">Quay lại</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+

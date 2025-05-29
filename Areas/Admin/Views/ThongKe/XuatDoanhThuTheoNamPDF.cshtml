@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.ChartDataPointViewModel>
+@{
+    Layout = null;
+    var fromYear = ViewBag.FromYear as int? ?? 2020;
+    var toYear = ViewBag.ToYear as int? ?? DateTime.Now.Year;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Báo cáo doanh thu theo năm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h2>BÁO CÁO DOANH THU THEO NĂM<br />(@fromYear - @toYear)</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Năm</th>
+                <th>Vốn</th>
+                <th>Doanh thu</th>
+                <th>Lợi nhuận</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.DateLabel.Year</td>
+                    <td class="text-end">@item.Von.ToString("N0") ₫</td>
+                    <td class="text-end">@item.DoanhThu.ToString("N0") ₫</td>
+                    <td class="text-end">@item.LoiNhuan.ToString("N0") ₫</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

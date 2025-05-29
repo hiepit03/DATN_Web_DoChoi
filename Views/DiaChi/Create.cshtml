@@ -1,0 +1,162 @@
+﻿@model Web_DoChoi.Models.DiaChiModel
+
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+
+        <h1>Thêm mới Địa Chỉ</h1>
+
+        <div class="col-md-12">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <!-- Cột thứ nhất -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tên Người Nhận</label>
+                            <input asp-for="TenNguoiNhan" class="form-control" />
+                            <span asp-validation-for="TenNguoiNhan" class="text-danger" />
+                        </div>
+                        <div class="form-group">
+                            <label>Số Điện Thoại</label>
+                            <input asp-for="SDTNhanHang" class="form-control" />
+                            <span asp-validation-for="SDTNhanHang" class="text-danger" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">                      
+                        <div class="form-group">
+                            <label>Mặc Định</label>
+                            <select asp-for="MacDinh" class="form-control">
+                                <option value="true">True</option>
+                                <option value="false">Fasle</option>
+                            </select>
+                            <span asp-validation-for="MacDinh" class="text-danger" />
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <input type="hidden" asp-for="FK_TaiKhoan" class="form-control" value="@ViewBag.idtaikhoan" />
+                            <span asp-validation-for="FK_TaiKhoan" class="text-danger" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-container">
+
+                            <div class="mb-3">
+                                <label for="province" class="form-label">Tỉnh / Thành phố</label>
+                                <select id="province" class="form-select" required></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="district" class="form-label">Quận / Huyện</label>
+                                <select id="district" class="form-select" required></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ward" class="form-label">Phường / Xã</label>
+                                <select id="ward" class="form-select" required></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="addressDetail" class="form-label">Địa chỉ cụ thể</label>
+                                <input type="text" class="form-control" id="addressDetail" placeholder="VD: Số 12, đường Nguyễn Văn Cừ" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Địa Chỉ</label>
+                                <input asp-for="DiaChiCuThe" class="form-control" readonly />
+                                <span asp-validation-for="DiaChiCuThe" class="text-danger" />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Nút Submit -->
+                    <div class="form-group" style="margin: 20px">
+                        <button type="submit" class="btn btn-primary">Thêm mới</button>
+                    </div>
+            </form>
+
+            <a asp-action="Index">Quay lại</a>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const host = "https://provinces.open-api.vn/api/";
+
+        const callAPI = (api) => {
+            return axios.get(api).then((res) => {
+                renderData(res.data, "province");
+            });
+        };
+
+        const callApiDistrict = (api) => {
+            return axios.get(api).then((res) => {
+                renderData(res.data.districts, "district");
+            });
+        };
+
+        const callApiWard = (api) => {
+            return axios.get(api).then((res) => {
+                renderData(res.data.wards, "ward");
+            });
+        };
+
+        const renderData = (array, selectId) => {
+            let html = '<option value="">-- Chọn --</option>';
+            array.forEach(item => {
+                html += `<option value="${item.code}">${item.name}</option>`;
+            });
+            document.getElementById(selectId).innerHTML = html;
+        };
+
+        // Gọi ban đầu
+        callAPI(host + "?depth=1");
+
+        // Sự kiện khi chọn tỉnh
+        $("#province").change(() => {
+            const provinceId = $("#province").val();
+            callApiDistrict(`${host}p/${provinceId}?depth=2`);
+            $("#ward").html('<option value="">-- Chọn --</option>');
+            updateResult();
+        });
+
+        // Khi chọn huyện
+        $("#district").change(() => {
+            const districtId = $("#district").val();
+            callApiWard(`${host}d/${districtId}?depth=2`);
+            updateResult();
+        });
+
+        // Khi chọn xã
+        $("#ward").change(() => {
+            updateResult();
+        });
+
+        $("#addressDetail").on("input", () => {
+            updateResult();
+        });
+
+        const updateResult = () => {
+            const province = $("#province option:selected").text();
+            const district = $("#district option:selected").text();
+            const ward = $("#ward option:selected").text();
+            const detail = $("#addressDetail").val();
+
+            if ($("#province").val() && $("#district").val() && $("#ward").val() && detail.trim() !== "") {
+                $("#DiaChiCuThe").val(`${detail}, ${ward}, ${district}, ${province}`);
+            } else {
+                $("#DiaChiCuThe").val("");
+            }
+        };
+    </script>
+}
+

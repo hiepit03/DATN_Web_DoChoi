@@ -1,0 +1,38 @@
+﻿@model TinTucModel
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white">Cập Nhật Tin Tức</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item text-white">Trang Chủ</li>
+        <li class="breadcrumb-item active text-white">
+            <a asp-action="Index" asp-controller="TinTuc">Tin Tức</a>
+        </li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div style="margin-top: 20px !important" class="trangchu container-fluid">
+    <div class="container">
+        <h1 style="font-weight: bold">@Model.TenTinTuc</h1>
+        <div class="d-flex justify-content-between align-items-center event-meta mb-2">
+            <div>
+                <i class="bi bi-calendar-event"></i>@Model.ThoiGian.ToString("dd/MM/yyyy")
+            </div>
+            <div><i class="bi bi-chat-dots"></i></div>
+        </div>
+
+        <div style="width: 100%; height: 20px; background-color: gray">
+        </div>
+
+        @Html.Raw(Model.MoTa)
+
+        <div style="width: 100%; height: 20px; background-color: gray">
+        </div>
+
+        <li class="breadcrumb-item active text-white">
+            <a asp-action="Index" asp-controller="TinTuc">Trở về</a>
+        </li>
+    </div>
+    
+</div>

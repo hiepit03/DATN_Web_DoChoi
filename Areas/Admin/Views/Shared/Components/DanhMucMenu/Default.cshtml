@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Web_DoChoi.Models.DanhMucModel>
+
+<div class="dropdown-menu m-0 bg-secondary rounded-0">
+    <a asp-action="TimKiemSP" asp-controller="Collection" class="dropdown-item"> Tất Cả Sản Phẩm</a>
+    @foreach(var dm in Model)
+    {
+        <a href="#" class="dropdown-item">@dm.TenDanhMuc</a>
+    }
+    
+</div>

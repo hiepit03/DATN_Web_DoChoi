@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Web_DoChoi.Models.MaKhuyenMaiModel>
+
+
+@if(Model.Count() == 0)
+{
+    <div class="container mt-4">
+        <div class="border rounded p-3 bg-light d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="fw-bold mb-2">Mã khuyến mãi</h6>
+                <h2>Không có Mã Giảm Giá!!!</h2>
+            </div>
+        </div>
+    </div>
+}
+else
+{   
+
+    <div class="container mt-4">
+        <div class="border rounded p-3 bg-light d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="fw-bold mb-2">Mã khuyến mãi</h6>
+                @foreach (var item in Model)
+                {
+                    <button class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-ticket-perforated"></i> @item.TenMaGiamGia
+                    </button>
+                }
+            </div>
+            <a style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#promoModal" class="text-decoration-underline">Xem tất cả</a>
+        </div>
+    </div>
+
+    <!-- Modal danh sách mã khuyến mãi -->
+    <div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mã khuyến mãi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="d-flex align-items-start border rounded p-3 mb-3 shadow-sm">
+                            <div class="me-3">
+                                <div class="bg-warning rounded-circle p-3">
+                                    <i class="bi bi-gift-fill fs-4 text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Giảm @item.GiaTienGiam.ToString("#,0")đ</div>
+                                <div class="text-muted small">Cho đơn hàng tối thiểu @item.GiaTienApDung.ToString("#,0")đ</div>
+                                <div class="text-muted small mb-2">HSD: @item.ThoiGianKetThuc.ToString("dd/MM/yyyy")</div>
+                                <a style="cursor: pointer" class="text-primary me-2" data-bs-toggle="modal" data-bs-target="#promoDetailModal_@item.PK_MaKhuyenMai" data-bs-dismiss="modal">Chi tiết</a>
+                                <button style="cursor: pointer" class="btn-copy btn btn-dark btn-sm" data-text="@item.TenMaGiamGia">Sao chép</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <!-- Modal chi tiết mã -->
+        <div class="modal fade" id="promoDetailModal_@item.PK_MaKhuyenMai" tabindex="-1" aria-labelledby="promoDetailLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Chi tiết mã khuyến mãi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Mã Giảm Giá: @item.TenMaGiamGia</strong></p>
+                        <p><strong>Giảm @item.GiaTienGiam.ToString("#,0")đ</strong></p>
+                        <p>🎯 Áp dụng cho đơn hàng từ @item.GiaTienApDung.ToString("#,0")đ trở lên</p>
+                        <p>🕒 Hạn sử dụng: @item.ThoiGianBatDau.ToString("dd/MM/yyyy") -> @item.ThoiGianKetThuc.ToString("dd/MM/yyyy")</p>
+                        <p>📄 Điều kiện: Áp dụng cho một số sản phẩm & khu vực nhất định. Không áp dụng cùng lúc với các mã freeship khác.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-copy').on('click', function () {
+            var text = $(this).data('text');
+            navigator.clipboard.writeText(text).then(function () {
+                alert("Đã sao chép: " + text);
+            }, function (err) {
+                alert("Lỗi sao chép: " + err);
+            });
+        });
+    });
+</script>

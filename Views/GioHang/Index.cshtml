@@ -1,0 +1,214 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.SanPhamGioHangViewModel>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    
+    <!-- Cart Page Start -->
+    <div class="container-fluid">
+        <div class="container">
+
+            @await Component.InvokeAsync("XemMaKhuyenMai")
+
+            <h1>Giỏ Hàng</h1>
+
+            <div class="row g-4 justify-content-end">
+                <div class="col-sm-12 col-md-7 col-lg-6 col-xl-8">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Đồ Chơi</th>
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Đơn Giá</th>
+                                    <th scope="col">Số Lượng</th>
+                                    <th scope="col">Thành Tiền</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    decimal tongtien = 0;
+                                    foreach (var item in Model)
+                                    {
+                                        decimal soLuongSP = Convert.ToDecimal(item.SoLuongSP);
+                                        decimal giaDoChoi = Convert.ToDecimal(item.GiaDoChoi);
+
+                                        if (soLuongSP > 0 && giaDoChoi > 0)
+                                        {
+                                            tongtien += soLuongSP * giaDoChoi;
+                                        }
+                                    }
+                                }
+
+                                @if(Model.Count() == 0)
+                                {
+                                    <H5>Không có sản phẩm</H5>
+                                }
+                                else
+                                {
+                                    
+                                    @foreach(var item in Model)
+                                    {
+                                        var thanhTien = item.SoLuongSP * item.GiaDoChoi;
+
+                                        <tr>
+                                            <th scope="row">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="~/media/dochoi/@item.HinhAnh" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                                                </div>
+                                            </th>
+                                            <td>
+                                                <p class="mb-0 mt-4">@item.TenDoChoi</p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0 mt-4">@item.GiaDoChoi.ToString("#,0")đ</p>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center mt-4" style="width: 100px; gap: 4px;">
+                                                    <!-- Nút trừ -->
+                                                    <form asp-controller="GioHang"
+                                                          asp-action="SuaSoLuongDoChoi"
+                                                          asp-route-idgiohang="@item.ChiTietGioHangId"
+                                                          asp-route-soLuong="@(item.SoLuongSP - 1)"
+                                                          method="post"
+                                                          style="display: inline;">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-minus rounded-circle bg-light border"
+                                                        @(item.SoLuongSP <= 1 ? "disabled" : "")>
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </form>
+
+                                                    <!-- Input -->
+                                                    <form asp-controller="GioHang"
+                                                          asp-action="SuaSoLuongDoChoi"
+                                                          method="post"
+                                                          style="display: inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="idgiohang" value="@item.ChiTietGioHangId" />
+                                                        <input type="number"
+                                                               name="soLuong"
+                                                               class="form-control form-control-sm text-center border-0"
+                                                               style="width: 50px;"
+                                                               value="@item.SoLuongSP"
+                                                               min="1"
+                                                               onchange="this.form.submit()" />
+                                                    </form>
+
+                                                    <!-- Nút cộng -->
+                                                    <form asp-controller="GioHang"
+                                                          asp-action="SuaSoLuongDoChoi"
+                                                          asp-route-idgiohang="@item.ChiTietGioHangId"
+                                                          asp-route-soLuong="@(item.SoLuongSP + 1)"
+                                                          method="post"
+                                                          style="display: inline;">
+                                                        <button type="submit" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <p  class=" mb-0 mt-4">
+                                                    @thanhTien.ToString("#,0")đ
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <form asp-controller="GioHang"
+                                                      asp-action="XoaDoChoi"
+                                                      asp-route-idgiohang="@item.ChiTietGioHangId"
+                                                      method="post"
+                                                      style="display:inline;">
+                                                    <button type="submit" class="btn btn-md rounded-circle bg-light border mt-4">
+                                                        <i class="fa fa-times text-danger"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+
+
+
+                                        </tr>
+                                    }
+
+                                }
+
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-5">
+                        <div>
+                            <label style="font-weight: bold;">Ghi chú đơn hàng</label>
+                            <textarea id="ghichu" placeholder="Ghi chú" style="
+                                    width: 100%;
+                                    height: 120px;
+                                    background-color: #eeeeee;
+                                    border: none;
+                                    padding: 10px;
+                                    font-size: 14px;
+                                    resize: none;
+                                "></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-1212 col-md-5 col-lg-6 col-xl-4">
+                    <div class="bg-light rounded">
+                        <div class="p-4">
+                            <h1 class="mb-4">Chi Tiết Giỏ Hàng</h1>
+                            <div class="d-flex justify-content-between mb-4">
+                                <h5 class="mb-0 me-4">Tiền hàng:</h5>
+                                <p class="mb-0">
+                                    @tongtien.ToString("#,0")đ
+                                </p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="mb-0 me-4">Shipping</h5>
+                                <div class="">
+                                    <p class="mb-0">Miễn Phí</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                            <h5 class="mb-0 ps-4 me-4">Thành Tiền</h5>
+                            <p style="color: red;" class="mb-0 pe-4">
+                                @tongtien.ToString("#,0")đ
+                            </p>
+                        </div>
+                        <button id="btnThanhToan" style="width: 90%;" class=" btn border-secondary text-primary text-uppercase mb-4 ms-4">
+                            THANH TOÁN
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Cart Page End -->
+
+</div>
+
+
+
+@if (TempData["ThongBao"] != null)
+{
+    <script>
+        alert(@Json.Serialize(TempData["ThongBao"]));
+    </script>
+
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+    $("#btnThanhToan").click(function (e) {
+        e.preventDefault();
+        var ghiChu = $("#ghichu").val();
+        // Encode ghi chú để tránh lỗi URL
+        var url = '/DatDonHang/Index?ghiChu=' + encodeURIComponent(ghiChu);
+        window.location.href = url;
+    });
+</script>

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.ChartDataPointViewModel>
+@{
+    Layout = null;
+    var year = ViewBag.Year;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Báo cáo doanh thu theo tháng - @year</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center;">BÁO CÁO DOANH THU THEO THÁNG NĂM @year</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Tháng</th>
+                <th>Vốn</th>
+                <th>Doanh thu</th>
+                <th>Lợi nhuận</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.DateLabel.Month</td>
+                    <td>@item.Von.ToString("N0") ₫</td>
+                    <td>@item.DoanhThu.ToString("N0") ₫</td>
+                    <td>@item.LoiNhuan.ToString("N0") ₫</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

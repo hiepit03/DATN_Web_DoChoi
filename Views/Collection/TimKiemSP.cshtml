@@ -1,0 +1,301 @@
+﻿@model IEnumerable<Web_DoChoi.Models.DoChoiModel>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+
+        <!-- Fruits Shop Start-->
+        <div class="container-fluid fruite">
+            <div class="container py-5">
+                <h1 class="mb-4">Tất Cả Sản Phẩm (@ViewBag.SoLuongSP Sản Phẩm)</h1>
+                <div class="row g-4">
+                    <div class="col-lg-12">
+                        <div class="row g-4">
+                            <div class="col-xl-3">
+                                <div class="input-group w-100 mx-auto d-flex">
+                                    <input id="search-input" type="search" class="form-control p-3" placeholder="Từ Khóa..." value="@ViewBag.TuKhoa" aria-describedby="search-icon-1">
+                                    <span id="searchbt" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-xl-3">
+                                <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                    <label for="fruits">Sắp Xếp Theo</label>
+                                    <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
+                                        <option value="volvo">Bán Chạy</option>
+                                        <option value="saab">Giá Giảm Dần</option>
+                                        <option value="opel">Giá Tăng Dần</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-3">
+                                <div class="row g-4">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <h4>Danh Mục</h4>
+
+                                            @await Component.InvokeAsync("DanhMucTimKiem")
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <h4>Nhà Sản Xuất</h4>
+
+                                            @await Component.InvokeAsync("NhaSanXuatTimKiem")
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <h4>ĐỘ TUỔI</h4>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 age-checkbox" id="age-1" name="doTuoi" value="0-2" @(ViewBag.DoTuoi?.Contains("0-2") == true ? "checked" : "") />
+                                                <label for="age-1"> 0 - 2 Tuổi</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 age-checkbox" id="age-2" name="doTuoi" value="2-6" @(ViewBag.DoTuoi?.Contains("2-6") == true ? "checked" : "") />
+                                                <label for="age-2"> 2 - 6 Tháng Tuổi</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 age-checkbox" id="age-3" name="doTuoi" value="6-12" @(ViewBag.DoTuoi?.Contains("6-12") == true ? "checked" : "") />
+                                                <label for="age-3"> 6 - 12 Tuổi</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 age-checkbox" id="age-4" name="doTuoi" value="12-18" @(ViewBag.DoTuoi?.Contains("12-18") == true ? "checked" : "") />
+                                                <label for="age-4"> 12 - 18 Tuổi</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 age-checkbox" id="age-5" name="doTuoi" value="18+" @(ViewBag.DoTuoi?.Contains("18+") == true ? "checked" : "") />
+                                                <label for="age-5"> Trên 18 Tuổi</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <h4>Khoảng Giá (VNĐ)</h4>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 price-checkbox" id="price-1" name="price" value="0-300"
+                                                @(ViewBag.KhoangGia != null && ViewBag.KhoangGia.Contains("0-300") ? "checked" : "") />
+                                                <label for="price-1"> Dưới 300,000 VND</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 price-checkbox" id="price-2" name="price" value="300-500"
+                                                @(ViewBag.KhoangGia != null && ViewBag.KhoangGia.Contains("300-500") ? "checked" : "") />
+                                                <label for="price-2"> 300,000 - 500,000 VND</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 price-checkbox" id="price-3" name="price" value="500-700"
+                                                @(ViewBag.KhoangGia != null && ViewBag.KhoangGia.Contains("500-700") ? "checked" : "") />
+                                                <label for="price-3"> 500,000 - 700,000 VND</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 price-checkbox" id="price-4" name="price" value="700-1000"
+                                                @(ViewBag.KhoangGia != null && ViewBag.KhoangGia.Contains("700-1000") ? "checked" : "") />
+                                                <label for="price-4"> 700,000 - 1,000,000 VND</label>
+                                            </div>
+                                            <div class="mb-2">
+                                                <input type="checkbox" class="me-2 price-checkbox" id="price-5" name="price" value="1000+"
+                                                @(ViewBag.KhoangGia != null && ViewBag.KhoangGia.Contains("1000+") ? "checked" : "") />
+                                                <label for="price-5"> Trên 1,000,000 VND</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="row g-4 justify-content-center">
+                                   
+                                    @foreach(var item in Model)
+                                    {
+                                        decimal giaMoi = Math.Round(item.GiaBan * 1.2m / 1000) * 1000;
+
+                                        <div class="col-md-6 col-lg-6 col-xl-4">
+
+                                            <div class="rounded position-relative fruite-item">
+                                                <a asp-action="Details" asp-controller="TrangChu" asp-route-IdDoChoi=@item.PK_DoChoi>
+                                                    @* <div class="fruite-img">
+                                                        <img src="~/media/dochoi/@item.AnhDoChoi"
+                                                                class="img-fluid w-100 rounded-top"
+                                                                style="aspect-ratio: 1 / 1; object-fit: cover;"
+                                                                alt="" />
+                                                    </div> *@
+                                                       
+                                                    <div class="fruite-img">
+                                                        <img src="~/media/dochoi/@item.AnhDoChoi"
+                                                             class="img-fluid w-100 rounded-top"
+                                                             style="aspect-ratio: 1 / 1; object-fit: cover; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-right: 1px solid #ccc;"
+                                                             alt="" />
+                                                    </div>
+                                                </a>
+                                                <div class="text-white px-2 py-1 rounded position-absolute fw-bold" style="top: 10px; left: 10px; background-color: #ff0000;">
+                                                    -@item.PhanTramKhuyenMai%
+                                                </div>
+                                                <div class="p-4 border border-top-0 rounded-bottom" style="text-align: left;">
+                                                    <a asp-action="Details" asp-controller="TrangChu" asp-route-IdDoChoi=@item.PK_DoChoi>
+                                                        @{
+                                                            var words = item.TenDoChoi.Split(' ');
+                                                            var shortText = words.Length > 5 ? string.Join(" ", words.Take(5)) + "..." : item.TenDoChoi;
+                                                        }
+                                                        <p>@shortText</p>
+
+                                                    </a>
+                                                    <div style="width: 100%;" class="d-flex">
+                                                        <p class="text-primary fs-5 fw-bold">@item.GiaBan.ToString("#,0") Đ</p>
+                                                        <p class="fs-5" style="margin-left: auto;">
+                                                            <del style="color: gray">@giaMoi.ToString("#,0") Đ</del>
+                                                        </p>
+                                                    </div>
+                                                    <button class="add-to-cart-btn btn rounded-pill px-3 w-100 text-white" style="background-color: #03A6F1;"
+                                                            data-iddochoi=@item.PK_DoChoi data-soluong=1>
+                                                        <i class="fa fa-shopping-bag me-2"></i> Thêm Vào Giỏ Hàng
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                    <div class="col-12">
+                                        <div class="pagination d-flex justify-content-center mt-5">
+                                            @if (ViewBag.CurrentPage > 1)
+                                            {
+                                                <a href="?page=@(ViewBag.CurrentPage - 1)" class="rounded">&laquo;</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" class="rounded disabled">&laquo;</a>
+                                            }
+
+                                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                            {
+                                                <a href="?page=@i" class="rounded @(i == ViewBag.CurrentPage ? "active" : "")">@i</a>
+                                            }
+
+                                            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                            {
+                                                <a href="?page=@(ViewBag.CurrentPage + 1)" class="rounded">&raquo;</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" class="rounded disabled">&raquo;</a>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fruits Shop End-->
+
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function applyFilters() {
+            let filters = {
+                tuKhoa: $("#search-input").val(),
+                doTuoi: [],
+                khoangGia: []
+            };
+
+            // Lấy các checkbox đã check
+            $(".age-checkbox:checked").each(function () {
+                filters.doTuoi.push($(this).val());
+            });
+
+            $(".price-checkbox:checked").each(function () {
+                filters.khoangGia.push($(this).val());
+            });
+
+            // Build query string
+            let queryParams = Object.keys(filters)
+                .map(key => {
+                    let values = filters[key];
+
+                    if (!Array.isArray(values)) {
+                        values = [values];
+                    }
+
+                    return values.map(val => `${key}=${encodeURIComponent(val)}`).join("&");
+                })
+                .filter(q => q.length > 0)
+                .join("&");
+
+            // Redirect với query mới
+            window.location.href = "/Collection/TimKiemSP?" + queryParams;
+        }
+
+        $(".age-checkbox, .price-checkbox").on("change", function () {
+            applyFilters();
+        });
+
+        // Gắn sự kiện click cho icon tìm kiếm
+        $('#searchbt').on('click', function () {
+            applyFilters();
+        });
+    });
+
+
+
+    $(document).ready(function() {
+        $('.add-to-cart-btn').click(function() {
+            // Lấy productId từ thuộc tính data-product-id của nút vừa nhấn
+            var iddochoi = $(this).data('iddochoi');
+            var soluong = $(this).data('soluong');
+
+            // Gửi yêu cầu AJAX để thêm sản phẩm vào giỏ hàng
+            $.ajax({
+                url: '/GioHang/ThemGioHang',  // Đường dẫn API thực tế của bạn
+                method: 'POST',
+                data: {
+                    iddochoi: iddochoi,
+                    soluong: soluong
+                },  // Dữ liệu gửi đi (id sản phẩm và số lượng)
+                success: function (data) {
+                    // Tải lại trang hoặc loại bỏ dòng phim khỏi bảng
+                    // Xóa thông báo cũ nếu có
+                    $(".alert").remove();
+
+                    $('#sosanpham').load('/GioHang/GioHangSoLuong');  // Cập nhật lại ViewComponent số lượng
+                    $('#cartDropdown').load('/GioHang/GioHangDropdown');  // Cập nhật lại ViewComponent
+
+                    // Tạo thông báo mới
+                    var alertDiv = `
+                                <div class="alert alert-dismissible fade show ${data.success ? 'alert-success' : 'alert-danger'
+                        }"
+                                     style="position: fixed; bottom: ${data.success ? '20px' : '80px'
+                        }; right: 20px; z-index: 1050;
+                                            max-width: 400px; min-width: 300px;
+                                            background-color: ${data.success ? '#28a745' : '#dc3545'
+                        }; color: white; font-weight: bold;
+                                            font-family: 'Roboto', sans-serif;
+                                            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+                                            border: none; opacity: 0; animation: fadeInOut 3.5s;">
+                                    <strong>${data.message}</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            `;
+
+                    // Thêm vào body
+                    $("body").append(alertDiv);
+
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+                }
+            });
+
+        });
+    });
+</script>

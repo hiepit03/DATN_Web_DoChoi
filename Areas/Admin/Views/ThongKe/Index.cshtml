@@ -1,0 +1,205 @@
+﻿@model Web_DoChoi.ViewModel.ThongKeTongQuanViewModel
+
+<style>
+    .card-icon {
+        font-size: 2rem;
+        color: #0d6efd;
+    }
+</style>
+
+<!-- Tabs chính -->
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="Index" asp-controller="ThongKe">Tổng quan</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="TonKho" asp-controller="ThongKe">Tồn kho</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="DoanhThu" asp-controller="ThongKe">Doanh thu</a>
+    </li>
+</ul>
+
+<nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1"><i class="bi bi-bar-chart-fill me-2"></i>Thống kê - Shop Đồ Chơi</span>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Tổng quan -->
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Doanh thu hôm nay</h6>
+                            <h4 class="mb-0 text-success">@Model.doanhthu.ToString("N0")₫</h4>
+                        </div>
+                        <i class="bi bi-cash-coin card-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Đơn hàng hôm nay</h6>
+                            <h4 class="mb-0">@Model.sldonhang</h4>
+                        </div>
+                        <i class="bi bi-bag-check card-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Sản phẩm đã bán</h6>
+                            <h4 class="mb-0">@Model.soluongspdaban</h4>
+                        </div>
+                        <i class="bi bi-box-seam card-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Tổng khách hàng</h6>
+                            <h4 class="mb-0">@Model.soluongkhachhanh</h4>
+                        </div>
+                        <i class="bi bi-person-plus card-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ -->
+    <div class="card mt-5 shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-graph-up-arrow me-2"></i>Biểu đồ doanh thu 8 ngày gần nhất</h5>
+            <canvas id="revenueChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Top sản phẩm -->
+    <div class="card mt-5 shadow-sm border-0">
+        <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-star-fill text-warning me-2"></i>Sản phẩm bán chạy</h5>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng đã bán</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Topdochoibanchay.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model.Topdochoibanchay[i].TenDoChoi</td>
+                                <td>@Model.Topdochoibanchay[i].SoLuongDaBan</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = [
+    @foreach (var item in Model.ChartDataPoints)
+    {
+        @: "@item.DateLabel.ToString("dd/MM")",
+        // dấu phẩy này là để tạo mảng JS
+    }
+        ];
+
+    const dataVon = [
+    @foreach (var item in Model.ChartDataPoints)
+    {
+        @: @item.Von,
+    }
+        ];
+
+    const dataDoanhThu = [
+    @foreach (var item in Model.ChartDataPoints)
+    {
+        @: @item.DoanhThu,
+    }
+        ];
+
+    const dataLoiNhuan = [
+    @foreach (var item in Model.ChartDataPoints)
+    {
+        @: @item.LoiNhuan,
+    }
+        ];
+
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Vốn',
+                    data: dataVon,
+                    backgroundColor: '#ffc107'
+                },
+                {
+                    label: 'Doanh thu',
+                    data: dataDoanhThu,
+                    backgroundColor: '#0d6efd'
+                },
+                {
+                    label: 'Lợi nhuận',
+                    data: dataLoiNhuan,
+                    backgroundColor: '#6f42c1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function (value) {
+                            return value.toLocaleString('vi-VN') + '₫';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return context.dataset.label + ': ' + context.parsed.y.toLocaleString('vi-VN') + '₫';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>

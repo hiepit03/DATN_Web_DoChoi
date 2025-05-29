@@ -1,0 +1,152 @@
+﻿@model IEnumerable<MaKhuyenMaiModel>
+
+
+
+<h1>Danh sách Mã Khuyến Mãi</h1>
+<!-- Table with stripped rows -->
+
+<a class="btn btn-primary btn-sm" asp-action="Create" asp-controller="MaKhuyenMai">
+    Sửa Mã Khuyến Mãi
+</a>
+
+
+
+<table id="check" class="table-bordered table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Khóa Mã</th>
+            <th>Tên MKM</th>
+            <th>Mô Tả</th>
+            <th>Giá Tiền Áp Dụng</th>
+            <th>Giá Tiền Giảm</th>
+            <th>Thời Gian Bắt Đầu</th>
+            <th>Thời Gian Kết Thúc</th>
+            <th>Trạng Thái</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {   
+            
+                var now = DateTime.Now;
+                string trangThai;
+                if (item.ThoiGianBatDau > now)
+                {
+                    trangThai = "Chưa bắt đầu";
+                }
+                else if (item.ThoiGianKetThuc < now)
+                {
+                    trangThai = "Đã kết thúc";
+                }
+                else
+                {
+                    trangThai = "Đang diễn ra";
+                }
+            
+
+            <tr>
+                <td>@item.PK_MaKhuyenMai</td>
+                <td>@item.TenMaGiamGia</td>
+                <td>@item.MoTa</td>
+                <td>@item.GiaTienApDung</td>
+                <td>@item.GiaTienGiam</td>
+                <td>@item.ThoiGianBatDau</td>
+                <td>@item.ThoiGianKetThuc</td>
+                <td>
+                    <span class="
+                        @((trangThai == "Đang diễn ra") ? "text-success fw-bold" :
+                          (trangThai == "Chưa bắt đầu") ? "text-warning fw-bold" :
+                          "text-danger fw-bold")">
+                        @trangThai
+                    </span>
+                </td>
+                <td>
+                    @if(item.PK_MaKhuyenMai != 1)
+                    {
+                        <!-- Nút xóa gọi AJAX -->
+                        <button class="btn btn-danger btn-sm btn-delete" data-id="@item.PK_MaKhuyenMai" data-bs-toggle="modal" data-bs-target="#myModal">
+                            Xóa
+                        </button>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- End Table with stripped rows -->
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa mã khuyến mãi này?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Xác nhận</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#check').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            let deleteId = null;
+
+            // Khi nhấn nút xóa
+            $('.btn-delete').on('click', function () {
+                deleteId = $(this).data('id');
+            });
+
+            // Khi nhấn nút xóa trong modal xác nhận
+            $('#confirmDelete').on('click', function () {
+                if (deleteId != null) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "MaKhuyenMai")',
+                        type: 'DELETE',
+                        data: { id: deleteId },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(); // Tải lại trang hoặc loại bỏ dòng phim khỏi bảng
+                            }
+                            $('#myModal').modal('hide');
+                        },
+                        error: function () {
+                            alert('Đã xảy ra lỗi.');
+                            $('#myModal').modal('hide');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

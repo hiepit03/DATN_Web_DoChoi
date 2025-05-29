@@ -1,0 +1,64 @@
+﻿
+<a href="/" class="btn btn-primary mt-3">Quay lại trang chủ</a>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+
+        @{
+            ViewData["Title"] = "Thanh toán Momo - Kết quả";
+        }
+
+        <h2>Thanh toán Momo</h2>
+
+        @if (ViewBag.IsSuccess)
+        {
+            <div class="alert alert-success">
+                <strong>Thanh toán thành công!</strong>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                <strong>Thanh toán thất bại!</strong>
+            </div>
+        }
+
+        <h3>Thông tin thanh toán:</h3>
+        <table class="table">
+            <tr>
+                <th>Order ID</th>
+                <td>@ViewBag.PaymentInfo["Order ID"]</td>
+            </tr>
+            <tr>
+                <th>Amount</th>
+                <td>@ViewBag.PaymentInfo["Amount"]</td>
+            </tr>
+            <tr>
+                <th>Order Info</th>
+                <td>@ViewBag.PaymentInfo["Order Info"]</td>
+            </tr>
+            <tr>
+                <th>Message</th>
+                <td>@ViewBag.PaymentInfo["Message"]</td>
+            </tr>
+            <tr>
+                <th>Transaction ID</th>
+                <td>@ViewBag.PaymentInfo["Transaction ID"]</td>
+            </tr>
+            <tr>
+                <th>Response Time</th>
+                <td>@ViewBag.PaymentInfo["Response Time"]</td>
+            </tr>
+            <tr>
+                <th>Pay Type</th>
+                <td>@ViewBag.PaymentInfo["Pay Type"]</td>
+            </tr>
+            <tr>
+                <th>Error Code</th>
+                <td>@ViewBag.PaymentInfo["Error Code"]</td>
+            </tr>
+        </table>
+
+    </div>
+</div>

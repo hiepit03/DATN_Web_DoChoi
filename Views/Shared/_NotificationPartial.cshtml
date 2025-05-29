@@ -1,0 +1,66 @@
+﻿@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert"
+         style="position: fixed; bottom: 20px; right: 20px; z-index: 1050;
+                max-width: 400px; min-width: 300px; background-color: #28a745; color: white; font-weight: bold;
+                font-family: 'Roboto', sans-serif; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); border: none; opacity: 0; animation: fadeInOut 3.5s;">
+        <strong>@TempData["SuccessMessage"]</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert"
+         style="position: fixed; bottom: 80px; right: 20px; z-index: 1050;
+                max-width: 400px; min-width: 300px; background-color: #dc3545; color: white; font-weight: bold;
+                font-family: 'Roboto', sans-serif; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); border: none; opacity: 0; animation: fadeInOut 3.5s;">
+        <strong>@TempData["ErrorMessage"]</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<style>
+    /* Import font Roboto hỗ trợ tiếng Việt */
+    @@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    /* Hiệu ứng fade in và fade out */
+    @@keyframes fadeInOut {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        10% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        90% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    }
+</style>
+
+<script>
+    // Tự động ẩn các thông báo sau khi hoàn tất hiệu ứng
+    setTimeout(function () {
+        var successAlert = document.getElementById('successMessage');
+        if (successAlert) {
+            var bootstrapSuccessAlert = new bootstrap.Alert(successAlert);
+            bootstrapSuccessAlert.close();
+        }
+
+        var errorAlert = document.getElementById('errorMessage');
+        if (errorAlert) {
+            var bootstrapErrorAlert = new bootstrap.Alert(errorAlert);
+            bootstrapErrorAlert.close();
+        }
+    }, 3500); // Hiển thị trong 3.5 giây (đồng bộ với animation)
+</script>

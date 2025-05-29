@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.SanPhamGioHangViewModel>
+    
+@{
+    decimal tongtien = 0;
+    foreach (var item in Model)
+    {
+        decimal soLuongSP = Convert.ToDecimal(item.SoLuongSP);
+        decimal giaDoChoi = Convert.ToDecimal(item.GiaDoChoi);
+
+        if (soLuongSP > 0 && giaDoChoi > 0)
+        {
+            tongtien += soLuongSP * giaDoChoi;
+        }
+    }
+}
+
+<input id="TongTien" type="hidden" value="@tongtien" />
+
+@foreach(var item in Model)
+{   
+    var thanhTien = item.SoLuongSP * item.GiaDoChoi;
+
+    <div class="product-item">
+        <div class="product-image">
+            <img src="~/media/dochoi/@item.HinhAnh" alt="product">
+            <div class="product-qty">@item.SoLuongSP</div>
+        </div>
+        <div class="product-info">
+            <div class="product-title">@item.TenDoChoi</div>
+            <div class="product-subtitle">@item.TenDoChoi</div>
+        </div>
+        <div class="product-subtitle">
+            @thanhTien.ToString("#,0") đ
+        </div>
+    </div>
+}

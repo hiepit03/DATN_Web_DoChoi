@@ -1,0 +1,159 @@
+﻿@model IEnumerable<Web_DoChoi.Models.DonHangModel>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+        <h1>Quản Lý Đơn Hàng</h1>
+
+        <!-- Ô tìm kiếm -->
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Tìm kiếm đơn hàng...">
+
+        <div class="table-responsive">
+            <table id="donHangTable" class="table table-hover table-striped align-middle text-center mb-0">
+                @{
+                    int i = 1;
+                }
+                <thead>
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên Người Nhận</th>
+                        <th scope="col">Số Điện Thoại</th>
+                        <th scope="col">Địa Chỉ Cụ Thể</th>
+                        <th scope="col">Thời Gian Đặt Hàng</th>
+                        <th scope="col">Giá Trị</th>
+                        <th scope="col">Phương Thức Thanh Toán</th>
+                        <th scope="col">Trạng Thái</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="9">Không Có Đơn Hàng !!!</td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.NguoiNhan</td>
+                            <td>@item.SDT</td>
+                            <td>@item.DiaChi</td>
+                            <td>@item.ThoiGianDatHang</td>
+                            <td>@item.TongGiaTri.ToString("#,0")đ</td>
+                            <td>
+                                @item.PhuongThucThanhToan
+                                -
+                                @if (item.TrangThaiThanhToan)
+                                {
+                                    <p>Đã Thanh Toán</p>
+                                }
+                                else
+                                {
+                                    <p>Chưa Thanh Toán</p>
+                                }
+
+                                @if(!item.TrangThaiThanhToan && item.PhuongThucThanhToan == "MoMo" && item.TrangThaiDonHang !="Đã Hủy")
+                                {
+
+                                    <form method="post" asp-action="CreatePaymentMoMo" asp-controller="Payment">
+                                        <input name="Amount" class="Amount" type="hidden" value="@item.TongGiaTri" />
+                                        <input name="OrderInfor" class="OrderInfor" type="hidden" value="Thanh Toán Đơn Hàng @item.PK_DonHang"/>
+                                        <input type="hidden" class="OrderId" name="OrderId" value="@Guid.NewGuid().ToString()"/>
+                                        <input name="FullName" class="FullName" type="hidden" value="@item.TaiKhoan.Email"/>
+                                        <input name="FK_DonHang" class="FK_DonHang" type="hidden" value="@item.PK_DonHang"/>
+                                        <button class="btn btn-sm btn-outline-primary">Thanh Toán MoMo</button>
+                                    </form>
+                                }
+
+                                @if (!item.TrangThaiThanhToan && item.PhuongThucThanhToan == "VNPay" && item.TrangThaiDonHang != "Đã Hủy")
+                                {
+
+                                    <form method="post" asp-action="CreatePaymentUrlVnpay" asp-controller="Payment">
+                                        <input name="Name" value="@item.TaiKhoan.Email" type="hidden" />
+                                        <input name="Amount" value="@item.TongGiaTri" type="hidden" />
+                                        <input name="OrderDescription" value="Thanh Toán Đơn Hàng @item.PK_DonHang" type="hidden" />
+                                        <input name="OrderId" value="@Guid.NewGuid().ToString()" type="hidden" />
+                                        <input name="OrderType" value="other" type="hidden" />
+                                        <input name="FK_DonHang" class="FK_DonHang" type="hidden" value="@item.PK_DonHang"/>
+                                        <button class="btn btn-sm btn-outline-primary">Thanh Toán VNPay</button>
+                                    </form>
+                                }
+
+                            </td>
+                            <td>
+                                @{
+                                    string color = item.TrangThaiDonHang switch
+                                    {
+                                        "Chờ Xác Nhận" => "blue",
+                                        "Đã Hủy" => "red",
+                                        "Đang Vận Chuyển" => "blue",
+                                        "Giao Hàng Thành Công" => "green",
+                                        _ => "black"
+                                    };
+                                }
+                                <span style="color:@color">@item.TrangThaiDonHang</span>
+                            </td>
+                            <td>
+                                @if (item.PhuongThucThanhToan == "MoMo" && !item.TrangThaiThanhToan && item.TrangThaiDonHang != "Đã Hủy")
+                                {
+                                    <button class="btn btn-sm btn-danger btn-huy" data-id="@item.PK_DonHang">Hủy</button>
+                                }
+
+                                @if (item.PhuongThucThanhToan == "VNPay" && !item.TrangThaiThanhToan && item.TrangThaiDonHang != "Đã Hủy")
+                                {
+                                    <button class="btn btn-sm btn-danger btn-huy" data-id="@item.PK_DonHang">Hủy</button>
+                                }
+
+                                @if (item.PhuongThucThanhToan == "COD" && item.TrangThaiDonHang =="Chờ Xác Nhận")
+                                {
+                                    <button class="btn btn-sm btn-danger btn-huy" data-id="@item.PK_DonHang">Hủy</button>
+                                }
+
+                                <a class="btn btn-sm btn-outline-primary" asp-action="XemChiTiet" asp-controller="XemDonHang" asp-route-id="@item.PK_DonHang">Xem</a>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+
+                $('#donHangTable tbody tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $('.btn-huy').on('click', function () {
+                const id = $(this).data('id');
+
+                if (confirm(`Bạn có chắc muốn hủy đơn hàng #${id}?`)) {
+                    $.ajax({
+                        url: '/XemDonHang/HuyDonHang',
+                        type: 'POST',
+                        data: { id: id, trangThai: 'Đã Hủy' },
+                        success: function () {
+                            alert('Đơn hàng đã được hủy thành công!');
+                            location.reload(); // Reload lại để hiển thị trạng thái mới
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra khi hủy đơn hàng!');
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+}

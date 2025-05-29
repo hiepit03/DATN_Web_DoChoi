@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.NhaSanXuatTimKiemViewModel>
+
+<ul class="list-unstyled">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="d-flex justify-content-between">
+                <a style="color: gray" asp-action="TimKiemSP" asp-controller="Collection" asp-route-nhaSanXuatId="@item.nsx.PK_NSX">
+                    <i class="fas fa-list"></i> @item.nsx.TenNSX
+                </a>
+                <span>(@item.SoLuongSP)</span>
+            </div>
+        </li>
+    }
+
+</ul>

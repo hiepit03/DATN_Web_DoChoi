@@ -1,0 +1,126 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.ChartDataPointViewModel>
+@{
+    ViewData["Title"] = "Thống kê doanh thu theo tháng";
+    var selectedYear = ViewBag.Year as int? ?? DateTime.Now.Year;
+}
+
+<!-- Tabs chính -->
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Index" asp-controller="ThongKe">Tổng quan</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="TonKho" asp-controller="ThongKe">Tồn kho</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="DoanhThu" asp-controller="ThongKe">Doanh thu</a>
+    </li>
+</ul>
+
+<!-- Tabs con -->
+<ul class="nav nav-pills mb-3" id="subTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link " asp-action="DoanhThu" asp-controller="ThongKe">Thống kê theo năm</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" asp-action="DoanhThuTheoThang" asp-controller="ThongKe">Thống kê từng tháng trong năm</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" asp-action="DoanhThuTheoNgay" asp-controller="ThongKe">Thống kê từng ngày trong tháng</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" asp-action="DoanhThuTheoNgayDenNgay" asp-controller="ThongKe">Thống kê Từ Ngày Đến Ngày</a>
+    </li>
+</ul>
+<!-- Form lọc theo năm -->
+<form method="get" class="card p-3 mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Năm</label>
+            <input type="number" name="year" class="form-control" value="@selectedYear" />
+        </div>
+        <div class="col-md-6 d-flex gap-2">
+            <button type="submit" name="export" value="none" class="btn btn-primary mt-4">
+                <i class="bi bi-bar-chart-fill me-1"></i> Thống kê
+            </button>
+            <button type="submit" name="export" value="excel" class="btn btn-success mt-4">
+                <i class="bi bi-file-earmark-excel me-1"></i> Xuất Excel
+            </button>
+            <button type="submit" name="export" value="pdf" class="btn btn-danger mt-4">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Xuất PDF
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Biểu đồ -->
+<div class="card p-3 mb-4">
+    <h5>Biểu đồ doanh thu theo tháng trong năm @selectedYear</h5>
+    <canvas id="chartMonth" height="400"></canvas>
+</div>
+
+<!-- Bảng dữ liệu -->
+<div class="card p-3">
+    <h5>Bảng thống kê theo tháng</h5>
+    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-striped align-middle">
+            <thead class="table-light sticky-top bg-white" style="z-index: 1;">
+                <tr>
+                    <th>Tháng</th>
+                    <th>Vốn</th>
+                    <th>Doanh thu</th>
+                    <th>Lợi nhuận</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.DateLabel.Month</td>
+                        <td>@item.Von.ToString("N0")₫</td>
+                        <td>@item.DoanhThu.ToString("N0")₫</td>
+                        <td>@item.LoiNhuan.ToString("N0")₫</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('chartMonth').getContext('2d');
+        const chartData = {
+            labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => "Tháng " + m.DateLabel.Month.ToString()))),
+            datasets: [
+                {
+                    label: 'Vốn',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => m.Von))),
+                    backgroundColor: '#f0ad4e'
+                },
+                {
+                    label: 'Doanh thu',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => m.DoanhThu))),
+                    backgroundColor: '#0d6efd'
+                },
+                {
+                    label: 'Lợi nhuận',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(m => m.LoiNhuan))),
+                    backgroundColor: '#6f42c1'
+                }
+            ]
+        };
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+}

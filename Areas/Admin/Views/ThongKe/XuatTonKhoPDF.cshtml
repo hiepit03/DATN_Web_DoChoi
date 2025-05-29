@@ -1,0 +1,102 @@
+﻿@model List<Web_DoChoi.Models.DoChoiModel>
+@{
+    Layout = null;
+    var now = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>Báo Cáo Tồn Kho</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+            margin: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .meta {
+            margin-bottom: 10px;
+        }
+
+            .meta span {
+                display: inline-block;
+                margin-right: 20px;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 8px 6px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f1f1f1;
+            text-transform: uppercase;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h2>Báo Cáo Tồn Kho</h2>
+
+    <div class="meta">
+        <span><strong>Ngày in:</strong> @now</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã SP</th>
+                <th class="text-left">Tên sản phẩm</th>
+                <th>Nhập</th>
+                <th>Đã bán</th>
+                <th>Tồn</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                int stt = 1;
+                foreach (var item in Model)
+                {
+                    var nhap = item.SoLuongConLai + item.SoLuongDaBan;
+                    <tr>
+                        <td>@stt</td>
+                        <td>@item.PK_DoChoi</td>
+                        <td class="text-left">@item.TenDoChoi</td>
+                        <td>@nhap</td>
+                        <td>@item.SoLuongDaBan</td>
+                        <td>@item.SoLuongConLai</td>
+                    </tr>
+                    stt++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6">Không có dữ liệu tồn kho.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

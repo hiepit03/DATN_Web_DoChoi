@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Web_DoChoi.Models.ChiNhanhModel>
+
+<style>
+    p{
+        margin: 0px;
+    }
+    .active{
+        color: #03A6F1;
+    }
+
+</style>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+        <div class="p-5 bg-light rounded">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="text-center mx-auto" style="max-width: 700px;">
+                        <h1 class="text-primary">Chi Nhánh Hoạt Động</h1>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="h-100 rounded">
+                        <button class="branch-btn w-100 btn active" data-index="0" type="button" style="margin-bottom: 10px; text-align: left; border: 1px solid black">
+                            <h6>Chi Nhánh Hà Đông</h6>
+                            <p>Số 10 Hà Đong, long liêb hà nội</p>
+                        </button>
+                        @{
+                            int index=1;
+                        }
+                        @foreach(var item in Model)
+                        {
+                            <button class="branch-btn w-100 btn" data-index="@index" type="button" style="margin-bottom: 10px; text-align: left; border: 1px solid black">
+                                <h6>@item.TenChiNhanh</h6>
+                                <p>@item.DiaChi</p>
+                            </button>
+                            index++;
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="h-100 rounded branch-info" data-index="0">
+                        <p>
+                            Địa chỉ: Tầng 3, TTTM AEON Hà Đông , KDT Dương Nội, Quận Hà Đông, Tp. Hà Nội
+
+                            Điện Thoại: 0906 765 119
+
+                            Thời gian mở cửa: 9 giờ 30 – 22 giờ
+                        </p>
+                        <iframe class="rounded w-100"
+                                style="height: 400px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387191.33750346623!2d-73.97968099999999!3d40.6974881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1694259649153!5m2!1sen!2sbd"
+                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    @{
+                        int divIndex = 1;
+                    }
+
+                    @foreach(var item in Model)
+                    {
+                        <div class="h-100 rounded branch-info d-none" data-index="@divIndex">
+                            @Html.Raw(item.GioiThieu)
+                        </div>
+                        divIndex++;
+                    }
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.branch-btn').click(function () {
+            var index = $(this).data('index');
+
+            // Remove 'active' from all buttons, then add to the clicked one
+            $('.branch-btn').removeClass('active');
+            $(this).addClass('active');
+
+            // Hide all branch-info divs
+            $('.branch-info').addClass('d-none');
+
+            // Show the selected one
+            $('.branch-info[data-index="' + index + '"]').removeClass('d-none');
+        });
+    });
+</script>

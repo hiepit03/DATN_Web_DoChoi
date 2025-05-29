@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Web_DoChoi.Models.DoChoiModel>
+
+<!-- Tabs chính -->
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Index" asp-controller="ThongKe">Tổng quan</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="TonKho" asp-controller="ThongKe">Tồn kho</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="DoanhThu" asp-controller="ThongKe">Doanh thu</a>
+    </li>
+</ul>
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Bộ lọc -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Tìm kiếm sản phẩm</h5>
+                    <form method="get">
+                        <div class="mb-3">
+                            <label class="form-label">Tìm kiếm sản phẩm</label>
+                            <input type="text" name="keyword" class="form-control" placeholder="Nhập tên sản phẩm..." value="@ViewBag.Keyword">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Từ ngày</label>
+                            <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Đến ngày</label>
+                            <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate">
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" name="export" value="pdf" class="btn btn-primary w-33">
+                                <i class="bi bi-file-earmark-pdf"></i> Xuất PDF
+                            </button>
+                            <button type="submit" name="export" value="excel" class="btn btn-success w-33">
+                                <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+                            </button>
+                            <button type="submit" name="filter" value="true" class="btn btn-danger w-33">
+                                <i class="bi bi-x-circle"></i> Làm mới
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng thống kê -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Danh sách sản phẩm tồn kho</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped mt-3">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã SP</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Ngày Nhập</th>
+                                    <th>Tồn đầu kỳ</th>
+                                    <th>Nhập trong kỳ</th>
+                                    <th>Xuất trong kỳ</th>
+                                    <th>Tồn cuối kỳ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    int stt = 1;
+                                    foreach (var item in Model)
+                                    {
+                                        int sl = item.SoLuongConLai + item.SoLuongDaBan;
+                                        <tr>
+                                            <td>@stt</td>
+                                            <td>@item.PK_DoChoi</td>
+                                            <td>@item.TenDoChoi</td>
+                                            <td>@item.NgayNhapHang.ToString("dd/MM/yyyy")</td>
+                                            <td>0</td>
+                                            <td>@sl</td>
+                                            <td>@item.SoLuongDaBan</td>
+                                            <td>@item.SoLuongConLai</td>
+                                        </tr>
+                                        stt++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">Không có dữ liệu tồn kho.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

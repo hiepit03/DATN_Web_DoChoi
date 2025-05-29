@@ -1,0 +1,345 @@
+﻿@model Web_DoChoi.ViewModel.ThongTinSanPhamViewModel
+
+<style>
+    .review-box {
+        display: flex;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .review-avatar img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+    }
+
+    .review-content {
+        flex: 1;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .review-name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        margin: 0;
+    }
+
+    .review-time {
+        font-size: 13px;
+        color: #888;
+    }
+
+    .review-stars {
+        color: #ffc107;
+        font-size: 18px;
+    }
+
+    .review-text {
+        margin-top: 5px;
+        font-size: 15px;
+        color: #444;
+    }
+</style>
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white">Chi Tiết Đồ Chơi</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item text-white">Trang Chủ</li>
+        <li class="breadcrumb-item active text-white">@Model.dochoi.TenDoChoi</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<!-- Single Product Start -->
+<div class="container-fluid mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 col-xl-12">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="border rounded">
+                            <img src="~/media/dochoi/@Model.dochoi.AnhDoChoi"
+                                 class="img-fluid w-100 rounded-top"
+                                 style="aspect-ratio: 1 / 1; object-fit: cover;"
+                                 alt="" />
+                        </div>
+                    </div>
+                    @{
+                        decimal giaMoi = Math.Round(Model.dochoi.GiaBan * 1.2m / 1000) * 1000;
+                    }
+                    <div class="col-lg-6">
+                        <h4 class="fw-bold mb-3">@Model.dochoi.TenDoChoi</h4>
+                        <p class="mb-3">Thương Hiệu: LEGO</p>
+                        <h5 class="fw-bold mb-3 text-primary fs-5 fw-bold">
+                            @Model.dochoi.GiaBan.ToString("#,0") Đ
+                            <del style="color: gray; font-size: 14px">@giaMoi.ToString("#,0") Đ</del>
+                        </h5>
+                        <div class="d-flex">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= @Model.dochoi.SoSao)
+                                {
+                                    <i class="fa fa-star  text-secondary"></i>  <!-- Sao sáng (màu vàng) -->
+                                }
+                                else
+                                {
+                                    <i class="fa fa-star"></i>  <!-- Sao mờ (màu xám) -->
+                                }
+                            }
+                            <p>/ @Model.dochoi.SoLuotDanhGia Đánh Giá</p>
+                        </div>
+                        <p class="mb-4">
+                            Đã bán: @Model.dochoi.SoLuongDaBan
+                        </p>
+                        <div class="input-group quantity mb-5" style="width: 150px;">
+                            <div class="input-group-btn">
+                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input id="soLuongInput" style="width: 50px" type="number" class="form-control form-control-sm text-center border-0" value="1">
+                            <div class="input-group-btn">
+                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex" style="width:100%">
+                            <a class="btn border px-4 py-2 mb-4" style="background-color: #03A6F1; color:white; margin-right: 20px">Thanh Toán</a>
+                            <button class="add-to-cart-btn btn border px-4 py-2 mb-4 text-primary" data-iddochoi=@Model.dochoi.PK_DoChoi>
+                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Thêm Vào Giỏ Hàng
+                            </button>                          
+                        </div>
+                       
+                    </div>
+                    <div class="col-lg-12">
+                        <nav>
+                            <div class="nav nav-tabs mb-3">
+                                <button class="nav-link active border-white border-bottom-0" style="color:black" type="button" role="tab"
+                                        id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
+                                        aria-controls="nav-about" aria-selected="true">
+                                    Mô Tả
+                                </button>
+                                <button class="nav-link border-white border-bottom-0" style="color:black" type="button" role="tab"
+                                        id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
+                                        aria-controls="nav-mission" aria-selected="false">
+                                    Đánh Giá
+                                </button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mb-5">
+                            <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                                @Html.Raw(Model.dochoi.MoTa)
+                            </div>
+                            <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+
+                                @foreach (var item in Model.DanhGias)
+                                {
+                                    <div class="review-box">
+                                        <div class="review-avatar">
+                                            <img src="~/media/avt_dochoi.png" alt="Avatar">
+                                        </div>
+                                        <div class="review-content">
+                                            <div class="review-header">
+                                                <p class="review-name">@item.TaiKhoan.UserName</p>
+                                                <p class="review-time time-added" data-time="@item.ThoiGianThem.ToString("o")">
+                                                    <!-- Sẽ hiển thị "2 phút trước" bằng JS -->
+                                                </p>
+                                            </div>
+                                            <div class="review-stars mb-1">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    if (i <= item.SoSaoDanhGia)
+                                                    {
+                                                        <i class="fa fa-star"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="review-text">
+                                                @item.LoiDanhGia
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                           
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+<!-- Single Product End -->
+<div class="container-fluid vesitable">
+    <div class="container py-5">
+        <h1 class="mb-0">Đồ Chơi Tương Tự</h1>
+        <div class="owl-carousel vegetable-carousel justify-content-center">
+            @foreach (var item in Model.Dochoilienquan)
+            {
+                decimal giaMoi2 = Math.Round(item.GiaBan * 1.2m / 1000) * 1000;
+
+                <div class="border rounded position-relative vesitable-item">
+                    <div class="vesitable-img">
+                        <img src="~/media/dochoi/@item.AnhDoChoi" style="aspect-ratio: 1 / 1; object-fit: cover;" class="img-fluid w-100 rounded-top" alt="">
+                    </div>
+                    <div class="text-white px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px; background-color: orange">New</div>
+                    <div class="p-4 border border-top-0 rounded-bottom" style="text-align: left;">
+                        @{
+                            var words = item.TenDoChoi.Split(' ');
+                            var shortText = words.Length > 5 ? string.Join(" ", words.Take(5)) + "..." : item.TenDoChoi;
+                        }
+                        <p>@shortText</p>
+
+                        @* <div style="
+                        font-size: 14px;
+                        color: gray;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        width: 100%;
+                        height: 30px
+                        ;">
+                            @Html.Raw(item.MoTa)
+                        </div> *@
+                        <div style="width: 100%;" class="d-flex">
+                            <p class="text-primary fs-5 fw-bold">@item.GiaBan.ToString("#,0") Đ</p>
+                            <p class="fs-5" style="margin-left: auto;">
+                                <del style="color: gray">@giaMoi2.ToString("#,0") Đ</del>
+                            </p>
+                        </div>
+                        <button class="add-to-cart-btn btn rounded-pill px-3 w-100 text-white" style="background-color: #03A6F1;"
+                                data-iddochoi=@item.PK_DoChoi data-soluong=1>
+                            <i class="fa fa-shopping-bag me-2"></i> Thêm Vào Giỏ Hàng
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Vesitable Shop End -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.add-to-cart-btn').click(function () {
+            // Lấy productId từ thuộc tính data-product-id của nút vừa nhấn
+            var iddochoi = $(this).data('iddochoi');
+            var soluong = $('#soLuongInput').val();
+
+            // Gửi yêu cầu AJAX để thêm sản phẩm vào giỏ hàng
+            $.ajax({
+                url: '/GioHang/ThemGioHang',  // Đường dẫn API thực tế của bạn
+                method: 'POST',
+                data: {
+                    iddochoi: iddochoi,
+                    soluong: soluong
+                },  // Dữ liệu gửi đi (id sản phẩm và số lượng)
+                success: function (data) {
+                    // Tải lại trang hoặc loại bỏ dòng phim khỏi bảng
+                    // Xóa thông báo cũ nếu có
+                    $(".alert").remove();
+
+                    $('#sosanpham').load('/GioHang/GioHangSoLuong');  // Cập nhật lại ViewComponent số lượng
+                    $('#cartDropdown').load('/GioHang/GioHangDropdown');  // Cập nhật lại ViewComponent
+
+                    // Tạo thông báo mới
+                    var alertDiv = `
+                                    <div class="alert alert-dismissible fade show ${data.success ? 'alert-success' : 'alert-danger'
+                        }"
+                                         style="position: fixed; bottom: ${data.success ? '20px' : '80px'
+                        }; right: 20px; z-index: 1050;
+                                                max-width: 400px; min-width: 300px;
+                                                background-color: ${data.success ? '#28a745' : '#dc3545'
+                        }; color: white; font-weight: bold;
+                                                font-family: 'Roboto', sans-serif;
+                                                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+                                                border: none; opacity: 0; animation: fadeInOut 3.5s;">
+                                        <strong>${data.message}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                `;
+
+                    // Thêm vào body
+                    $("body").append(alertDiv);
+
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi nếu có
+                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+                }
+            });
+
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/vi.js"></script>
+<script>
+    dayjs.extend(dayjs_plugin_relativeTime);
+    dayjs.locale('vi'); // ⬅️ chuyển sang tiếng Việt
+
+    $(function () {
+        $('.time-added').each(function () {
+            const isoTime = $(this).data('time');
+            const formatted = dayjs(isoTime).fromNow(); // ví dụ: "2 phút trước"
+            $(this).text(formatted);
+        });
+    });
+</script>
+
+
+<style>
+    /* Import font Roboto hỗ trợ tiếng Việt */
+    @@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    /* Hiệu ứng fade in và fade out */
+    @@keyframes fadeInOut {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        10% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        90% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+    }
+</style>
+

@@ -1,0 +1,33 @@
+﻿<a href="/" class="btn btn-primary mt-3">Quay lại trang chủ</a>
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+
+        @{
+            var paymentInfo = ViewBag.PaymentInfo as Dictionary<string, string>;
+            var isSuccess = ViewBag.IsSuccess as bool?;
+        }
+
+        <h2>Kết quả thanh toán VNPAY</h2>
+
+        @if (isSuccess.HasValue && isSuccess.Value)
+        {
+            <p><strong>Thanh toán thành công!</strong></p>
+        }
+        else
+        {
+            <p><strong>Thanh toán thất bại!</strong></p>
+        }
+
+        <h3>Thông tin thanh toán:</h3>
+        <ul>
+            @foreach (var item in paymentInfo)
+            {
+                <li><strong>@item.Key:</strong> @item.Value</li>
+            }
+        </ul>
+
+
+    </div>
+</div>

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Web_DoChoi.ViewModel.SanPhamGioHangViewModel>
+
+
+    <h3>GIỎ HÀNG</h3>
+
+    @{
+        decimal tongtien = 0;
+        foreach (var item in Model)
+        {
+            decimal soLuongSP = Convert.ToDecimal(item.SoLuongSP);
+            decimal giaDoChoi = Convert.ToDecimal(item.GiaDoChoi);
+
+            if (soLuongSP > 0 && giaDoChoi > 0)
+            {
+                tongtien += soLuongSP * giaDoChoi;
+            }
+        }
+    }
+
+    @if(Model.Count() == 0)
+    {
+        <h5>Hiện chưa có sản phẩm</h5>
+    }
+    else
+    {
+        @foreach (var item in Model)
+        {
+            <div class="cart-item" >
+                <div class="remove-item" data-id="@item.ChiTietGioHangId">
+                    ✖
+                </div>
+                <img src="~/media/dochoi/@item.HinhAnh" alt="Sản phẩm">
+                <div class="item-info">
+                    <strong>@item.TenDoChoi</strong>
+                    <div style="display: flex;">
+                        <small style="background-color: #ddd; height: 20px; width: 20px; justify-content: center; align-items: center; display: flex;">
+                            @item.SoLuongSP
+                        </small>
+                        <small style="margin-left: auto;">
+                            @item.GiaDoChoi.ToString("#,0") đ
+                        </small>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+   
+    <div class="cart-total">
+        <span><strong>TỔNG TIỀN:</strong></span>
+        <span id="totalPrice">
+            @tongtien.ToString("#,0") đ
+        </span>
+    </div>
+
+    <div class="cart-actions">
+        <a style="background-color: red;" asp-action="Index" asp-controller="GioHang">
+            XEM GIỎ HÀNG
+        </a>
+        <a style="background-color: #007bff; display: flex; justify-content: center; align-items: center" asp-action="Index" asp-controller="DatDonHang">
+            THANH TOÁN
+        </a>
+    </div>

@@ -1,0 +1,73 @@
+﻿@model Web_DoChoi.ViewModel.DonHangViewModel
+
+@{
+    ViewData["Title"] = "Chi Tiết Đơn Hàng";
+}
+
+<div class="trangchu container-fluid">
+    <div style="height: 20px"></div>
+    <div class="container">
+        <div class="container mt-4">
+            <h2>Chi Tiết Đơn Hàng # @Model.DonHang.PK_DonHang</h2>
+
+            <div class="mb-3">
+                <p><strong>Người Nhận:</strong> @Model.DonHang.NguoiNhan</p>
+                <p><strong>Số Điện Thoại:</strong> @Model.DonHang.SDT</p>
+                <p><strong>Địa Chỉ:</strong> @Model.DonHang.DiaChi</p>
+                <p><strong>Thời Gian Đặt Hàng:</strong> @Model.DonHang.ThoiGianDatHang.ToString("dd/MM/yyyy HH:mm")</p>
+                <div>
+                    <strong>Phương Thức Thanh Toán:</strong> @Model.DonHang.PhuongThucThanhToan
+                </div>
+                @{
+                    var color = Model.DonHang.TrangThaiDonHang switch
+                    {
+                        "Chờ Xác Nhận" => "blue",
+                        "Đã Hủy" => "red",
+                        "Đang Vận Chuyển" => "orange",
+                        "Giao Hàng Thành Công" => "green",
+                        _ => "black"
+                    };
+                }
+
+                <p><strong>Trạng Thái:</strong> <span style="color:@color">@Model.DonHang.TrangThaiDonHang</span></p>
+            </div>
+
+            <h4>Sản Phẩm Trong Đơn Hàng</h4>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Hình Ảnh</th>
+                        <th>Tên Đồ Chơi</th>
+                        <th>Giá</th>
+                        <th>Số Lượng</th>
+                        <th>Thành Tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sp in Model.ChiTietDonHangs)
+                    {
+                        var thanhtien = sp.SoLuongSP * sp.Gia;
+                        <tr>
+                            <td><img src="~/media/dochoi/@sp.HinhAnh" alt="Ảnh" style="width: 80px; height: 80px" /></td>
+                            <td>@sp.TenDoChoi</td>
+                            <td>@sp.Gia.ToString("#,0")đ</td>
+                            <td>@sp.SoLuongSP</td>
+                            <td>@thanhtien.ToString("#,0")đ</td>
+                        </tr>
+
+                    }
+                    <tr>
+                        <th colspan="4">Tổng Tiền</th>
+                        <th>@Model.DonHang.TongGiaTri.ToString("#,0")đ</th>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a class="btn btn-danger" asp-area="" asp-action="XuatPDF" asp-controller="XemDonHang" asp-route-id="@Model.DonHang.PK_DonHang" target="_blank">
+                Xuất PDF
+            </a>
+
+        </div>
+
+    </div>
+</div>

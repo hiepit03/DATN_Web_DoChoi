@@ -1,0 +1,63 @@
+﻿@model Web_DoChoi.Models.TaiKhoanModel
+<h1>Sửa Tài Khoản</h1>
+
+<div class="col-md-9">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <!-- Cột thứ nhất -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>PK_TaiKhoan</label>
+                    <input asp-for="PK_TaiKhoan" class="form-control" value="@Model.PK_TaiKhoan" readonly/>
+                    <span asp-validation-for="PK_TaiKhoan" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Tên Hiển Thị</label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>Chức Vụ</label>
+                    <select asp-for="ChucVu" class="form-control">
+                        <option value="admin">Admin</option>
+                        <option value="user">user</option>
+                    </select>
+                    <span asp-validation-for="ChucVu" class="text-danger" />
+                </div>
+            </div>
+
+            <!-- Cột thứ hai -->
+            <div class="col-md-6">
+                <!-- Cột thứ hai -->
+                <div class="form-group">
+                    <label>Email</label>
+                    <input asp-for="Email" class="form-control" value="@Model.Email" readonly/>
+                    <span asp-validation-for="Email" class="text-danger" />
+                </div>
+                <div class="form-group">
+                    <label>PassWord</label>
+                    <label style="color: red">Nhập Password mới -- chú ý mã hóa</label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger" />
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Nút Submit -->
+        <div class="form-group" style="margin: 20px">
+            <button type="submit" class="btn btn-primary">Thêm mới</button>
+        </div>
+    </form>
+
+    <a asp-action="Index">Quay lại</a>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+}
+
